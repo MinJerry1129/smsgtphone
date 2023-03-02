@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "511045893475",
+    "project_id": "smsgtphone",
+    "storage_bucket": "smsgtphone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511045893475:android:fe05362907725fa8a72756",
+        "android_client_info": {
+          "package_name": "com.smsgtphone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "511045893475-7rrvuoacuuh2u65o6fu6dmjhs930j3fc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbhFYTBIsohH0kYHlq1rygN54HczD8yfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "511045893475-7rrvuoacuuh2u65o6fu6dmjhs930j3fc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
