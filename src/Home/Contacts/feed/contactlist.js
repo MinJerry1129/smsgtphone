@@ -1,26 +1,26 @@
-import React, {memo} from 'react';
+import React, {memo, useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
-function SmsList({item,index}){
-    console.log(item)
+function ContactList({item,index, onClickList}){
+    const [isSel, setIsSel] = useState(true)
     const handlePositionPage = () =>{
-        console.log("test")
+        onClickList(index)
+        setIsSel(!isSel)
     }
     return(
-        <TouchableOpacity onPress={handlePositionPage} style={styles.contain}>
+        <TouchableOpacity onPress={() => handlePositionPage()} style={styles.contain} key={index}>
             <View style={styles.listContainter}>
                 <View style={styles.iconContainter}>
-                    {item.status?
-                    <Icon name="check" size={20} color="#00ff00"/>:
-                    <Icon name="times" size={20} color="#ff0000"/>
+                    {isSel?
+                    <Icon name="check-square" size={20} color="#00ff00"/>:
+                    <Icon name="square" size={20} color="#ff0000"/>
                     }
-                    
                 </View>
-                <View style={styles.textContainter}>
-                    <Text style={styles.title}>{item.nombre}</Text>
-                    <Text style={styles.favorite}>{item.fecha}</Text>  
-                </View>                          
+                <View style={styles.textContainter} >
+                    <Text style={styles.title}>{item}</Text>
+                    <Text style={styles.favorite}>{item}</Text>  
+                </View>
             </View>
         </TouchableOpacity>
         
@@ -62,4 +62,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default memo(SmsList);
+export default memo(ContactList);
