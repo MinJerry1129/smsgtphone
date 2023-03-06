@@ -20,11 +20,12 @@ import StatusList from './feed/statuslist';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import sendSMS from '../../Sms/sms';
+import {request,check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 const height = Dimensions.get('window').height;
 
 const Status = ({ route }) => {
-  const { listContact, message} = route.params;
+  const { listContact, message, champignId} = route.params;
   console.log('message',message)
   const [listSelContact, setListSelContact] = useState([])
   const [isplay, setIsPlay] = useState(true)
@@ -38,20 +39,59 @@ const Status = ({ route }) => {
   }, [listContact]);
 
   const getData = () => {
+    request(PERMISSIONS.ANDROID.SEND_SMS)
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((error) => {
+        // …
+      });
     setListSelContact(listContact.filter((item) => item['sel'] == true))
   }
+
+  const updateStatus = (status_string) =>{
+    axios.put('https://webservice.gtphone.es/api/promocion/' + champignId, {
+      headers: {
+        'token': 'Bearer ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvSUQiOiI2Mjc1Njk2MGRjN2E4YTZhMTRmYmM1ZDYiLCJyb2wiOiJBRE1JTiIsImlhdCI6MTY3Nzc2NTc4MiwiZXhwIjoxNzA5MzAxNzgyfQ.F5B61yiRv8-ueJaG_Aj86R56h7v_aItWKkbYEkRY1c0",
+        'Content-Type': 'application/json'
+      },
+      data: {
+        "estado":status_string,
+        "confirmados":"ok"
+      }
+    })
+      .then(response => {        
+        console.log("response::",response)       
+      })
+      .catch(error => {
+        console.log("error::",error);
+      });
+  }
+
   const handleStatusPage = () => {
     navigation.push('Contact');
   }
 
   const onSendBtn = () => {
-    if (!isplay) {
-      startInterval()
-    } else {
-      setSendIndex(sendindex + 1)
-      stopInterval()
-    }
-    setIsPlay(!isplay)
+    if(listSelContact.length == 1){
+      sendSMS(listSelContact[0]["contact"],message)
+      let buffer_sel = listSelContact
+      buffer_sel[0]['sel'] = false
+      setListSelContact([...buffer_sel]);
+      updateStatus("Sent SMS")
+      // setIsPlay(true)
+    }else{
+      if (!isplay) {
+        updateStatus("start sending SMS")
+        startInterval()
+        
+      } else {
+        setSendIndex(sendindex + 1)
+        stopInterval()
+        updateStatus("pause send SMS, Sent to" + sendindex + "contacts")
+      }
+      setIsPlay(!isplay)
+    }    
   }
 
 
@@ -74,6 +114,7 @@ const Status = ({ route }) => {
   useEffect(() => {
     console.log(sendindex);
     if (sendindex >= listSelContact.length - 1) {
+      updateStatus("sent all SMS")
       stopInterval()
     }
   }, [sendindex])

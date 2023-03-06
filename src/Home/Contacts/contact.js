@@ -18,6 +18,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import ContactList from './feed/contactlist';
 import { useNavigation } from '@react-navigation/native';
+import {request,check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import axios from 'axios';
 
 const height = Dimensions.get('window').height;
@@ -35,6 +36,14 @@ const Contact = ({ route }) => {
   }, []);
 
   const getData = () => {
+    request(PERMISSIONS.ANDROID.SEND_SMS)
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((error) => {
+        // …
+      });
+      
     axios.get('https://webservice.gtphone.es/api/promocion/' + champignId + '/contactos', {
       headers: {
         'token': 'Bearer ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvSUQiOiI2Mjc1Njk2MGRjN2E4YTZhMTRmYmM1ZDYiLCJyb2wiOiJBRE1JTiIsImlhdCI6MTY3Nzc2NTc4MiwiZXhwIjoxNzA5MzAxNzgyfQ.F5B61yiRv8-ueJaG_Aj86R56h7v_aItWKkbYEkRY1c0",
@@ -59,7 +68,7 @@ const Contact = ({ route }) => {
   }
 
   const handleStatusPage = () => {
-    navigation.push('Status', { listContact: listSelContact, message: message});
+    navigation.push('Status', { listContact: listSelContact, message: message, champignId : champignId});
   }
 
   const positionlistItem = ({ item, index }) => (

@@ -5,11 +5,13 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   PermissionsAndroid
 } from 'react-native';
+
+import {request,check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -18,9 +20,20 @@ import Champign from './Champign/champign';
 
 const Stack = createStackNavigator();
 
+PERMISSIONS.ANDROID.SEND_SMS
+
 function App() {
-  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.SEND_SMS);
+  useEffect(()=>{
+    request(PERMISSIONS.ANDROID.SEND_SMS)
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((error) => {
+        // …
+      });
+  })
+  // PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+  // PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.SEND_SMS);
   return (
     <NavigationContainer>
       <Stack.Navigator>
